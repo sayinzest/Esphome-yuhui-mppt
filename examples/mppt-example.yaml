@@ -1,0 +1,168 @@
+esphome:
+  name: mppt
+  friendly_name: mppt
+
+esp8266:
+  board: d1_mini
+
+logger: 
+  level: DEBUG
+  baud_rate: 0
+
+api:
+  encryption:
+    key: "yhmpptlocal11+gGAsyAQee8zbxiR4ZZE9lpkMca9QA="
+
+
+wifi:
+  ssid: aaa
+  password: bbb
+  min_auth_mode: WPA2
+  ap:
+    ssid: "mppt"
+    password: "abc123456789"
+  fast_connect: true # 连接时跳过扫描过程，也减少了后台扫描的需求[reference:2]
+  power_save_mode: none             # 禁用省电模式，以保证WiFi的持续高性能[reference:3]
+  
+web_server:
+  port: 80
+  
+ota:
+  - platform: esphome
+    password: "a7fe278219b26da4feed03d4dd5c56c6"
+  - platform: web_server   # 新增：启用网页上传  
+
+uart:
+  tx_pin: GPIO3
+  rx_pin: GPIO1
+  baud_rate: 9600
+
+
+external_components:
+  - source: my_components
+    components: [ yuhui_mppt ]
+
+yuhui_mppt:
+  address: 1
+  update_interval: 10s #太快出错
+  pv_voltage_id: pv_voltage_sensor
+  battery_voltage_id: battery_voltage_sensor
+  charging_current_id: charging_current_sensor
+  charging_power_id: charging_power_sensor
+  internal_temperature_id: internal_temperature_sensor
+  external_temperature_id: external_temperature_sensor
+  daily_energy_id: daily_energy_sensor
+  total_energy_id: total_energy_sensor
+  disable_charge_switch_id: disable_charge_switch
+  dc_output_switch_id: dc_output_switch
+  max_current_number_id: max_current_number
+sensor:
+  - platform: template
+    id: pv_voltage_sensor
+    name: "Yuhui MPPT PV Voltage"
+    unit_of_measurement: V
+    accuracy_decimals: 1
+    device_class: voltage
+  - platform: template
+    id: battery_voltage_sensor
+    name: "Yuhui MPPT Battery Voltage"
+    unit_of_measurement: V
+    accuracy_decimals: 2
+    device_class: voltage
+  - platform: template
+    id: charging_current_sensor
+    name: "Yuhui MPPT Charging Current"
+    unit_of_measurement: A
+    accuracy_decimals: 2
+    device_class: current
+  - platform: template
+    id: charging_power_sensor
+    name: "Yuhui MPPT Charging Power"
+    unit_of_measurement: W
+    accuracy_decimals: 1
+    device_class: power
+  - platform: template
+    id: internal_temperature_sensor
+    name: "Yuhui MPPT Internal Temperature"
+    unit_of_measurement: °C
+    accuracy_decimals: 1
+    device_class: temperature
+  - platform: template
+    id: external_temperature_sensor
+    name: "Yuhui MPPT External Temperature"
+    unit_of_measurement: °C
+    accuracy_decimals: 1
+    device_class: temperature
+  - platform: template
+    id: daily_energy_sensor
+    name: "Yuhui MPPT Daily Energy"
+    unit_of_measurement: kWh
+    accuracy_decimals: 2
+    device_class: energy
+    state_class: total_increasing
+  - platform: template
+    id: total_energy_sensor
+    name: "Yuhui MPPT Total Energy"
+    unit_of_measurement: kWh
+    accuracy_decimals: 2
+    device_class: energy
+    state_class: total_increasing  
+
+
+   #增加昨天传感器 
+  - platform: template
+    name: "Yuhui MPPT Yesterday Energy"
+    unit_of_measurement: kWh
+    accuracy_decimals: 2
+    device_class: energy
+    lambda: |-
+      return id(yesterday_energy_kwh);
+    update_interval: 60s 
+
+# 两个开关    
+switch:
+  - platform: template
+    id: disable_charge_switch
+    name: "Yuhui MPPT Disable Charging"
+    optimistic: true
+  - platform: template
+    id: dc_output_switch
+    name: "Yuhui MPPT DC Output"
+    optimistic: true
+    
+# 充电电流选择开关    
+number:
+  - platform: template
+    name: "Max Charging Current"        # 在HA中显示的名称
+    id: max_current_number             # 在ESPHome中用于引用的ID，与代码对应
+    unit_of_measurement: "A"           # 单位
+    mode: box                          # 'box' 模式在移动端体验更好，也可用'slider'
+    min_value: 0.5                    # 最小值限制0.1
+    max_value: 40                  # 最大值限制130A
+    step: 0.1                          # 点击+/-按钮时的增减步长
+    optimistic: true                   # 界面立即响应，无需等待设备确认
+    
+# 可选：时间组件用于昨日发电量（如果需要，可以添加）
+  
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: Asia/Shanghai
+    on_time:
+      - seconds: 5
+        minutes: 0
+        hours: 0
+        then:
+          - lambda: |-
+              float daily = id(daily_energy_sensor).state;
+              id(yesterday_energy_kwh) = daily;
+              ESP_LOGD("yesterday", "Yesterday energy saved: %.2f kWh", daily);
+globals: # 每天午夜零点过5秒，将当前日发电量存入昨日变量
+  - id: yesterday_energy_kwh
+    type: float
+    restore_value: true
+    initial_value: "0.0"
+
+
+
+#  至此结束,本版本为云开新能源张工,esphome本地化组件,2026-5-21.
