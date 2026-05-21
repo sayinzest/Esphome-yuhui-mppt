@@ -39,7 +39,7 @@ uart:
 
 
 external_components:
-  - source: my_components
+  - source: github://sayinzest/Esphome-yuhui-mppt@main
     components: [ yuhui_mppt ]
 
 yuhui_mppt:
