@@ -118,7 +118,20 @@ sensor:
     lambda: |-
       return id(yesterday_energy_kwh);
     update_interval: 60s 
-
+  # 光伏发电效率  
+  - platform: template            
+    name: "Yuhui Solar Efficiency"
+    unit_of_measurement: '%'
+    accuracy_decimals: 2
+    lambda: |-
+      float nominal_power = 1000.0; // 标称功率，单位为瓦特(W)
+      float current_charging_power = id(charging_power_sensor).state; // 这个括号里面的id是引用前面那个。更改变量名以避免冲突
+      if (nominal_power > 0) {
+       return (current_charging_power / nominal_power) * 100.0; // 计算发电效率并转换为百分比
+       } else {
+       return 0.0; // 如果标称功率为0,为避免除以0的错误,直接返回0
+       }
+    update_interval: 10s  # 数据更新频率
 # 两个开关    
 switch:
   - platform: template
