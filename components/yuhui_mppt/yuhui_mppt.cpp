@@ -31,18 +31,7 @@ void YuhuiMppt::setup() {
         this->on_max_current_value(value);
       }
     });
-    // 启动时读取一次，但绝不写入
-    delay(3000);
-    uint16_t current_ma;
-    if (read_parameter_(0x25, current_ma)) {
-      float current_a = current_ma / 100.0f;
-      skip_number_callback_ = true;
-      max_current_number_->publish_state(current_a);
-      skip_number_callback_ = false;
-      ESP_LOGI(TAG, "Init sync max current = %.1fA", current_a);
-    } else {
-      ESP_LOGW(TAG, "Could not read max current at startup");
-    }
+    
   }
 }
 
