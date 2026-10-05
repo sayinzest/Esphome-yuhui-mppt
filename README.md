@@ -42,7 +42,9 @@ Made for mppt charginger for Yuhui or Jvyuan ,esphome base on Homeassistant syst
 
 external_components:
   - source: github://sayinzest/Esphome-yuhui-mppt@main
+  - 
     components: [ yuhui_mppt ]
+    
     refresh: 0s   # 强制每次编译都拉取最新
 
 
