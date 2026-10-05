@@ -15,7 +15,9 @@ Made for mppt charginger for Yuhui or Jvyuan ,esphome base on Homeassistant syst
   
 ## 修正历史(没有tag分支，只有Main)
  v1.2, 修正mppt的功率计算错误。
+ 
  v1.1, 修正重启会将充电电流清零默认；
+ 
  v1.0，第一次发布，带调节电流功能；
 
 ## 接线
