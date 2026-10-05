@@ -196,7 +196,8 @@ bool YuhuiMppt::parse_frame_(const std::vector<uint8_t> &data) {
   uint32_t raw_total = (data[24] << 24) | (data[25] << 16) | (data[26] << 8) | data[27];
   float total_energy_kwh = raw_total / 1000.0f;
 
-  float charging_power = pv_voltage * charging_current;
+  // 充电功率 = 电池电压 × 充电电流
+  float charging_power = battery_voltage * charging_current;
 
   if (pv_voltage_sensor_) pv_voltage_sensor_->publish_state(pv_voltage);
   if (battery_voltage_sensor_) battery_voltage_sensor_->publish_state(battery_voltage);
