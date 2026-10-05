@@ -15,7 +15,7 @@ Made for mppt charginger for Yuhui or Jvyuan ,esphome base on Homeassistant syst
 
 ## 接线
 
-| ESP8266 | RS485 模块 | MPPT 端子 |
+| ESP8266 | RS485转TTL模块 | MPPT 端子 |
 |---------|------------|-----------|
 | TX(GPIO1) | Rx-----A | A+ |
 | RX(GPIO3) | TX-----B | B- |
@@ -24,7 +24,11 @@ Made for mppt charginger for Yuhui or Jvyuan ,esphome base on Homeassistant syst
 
 波特率：9600 8 N 1
 
-## 使用方法设备报错：
+## 设备报错：
+如果连接正常，数据为未知，esphome窗口传回错误为B3,重点查485转TTL硬件。
+
+
+## 配置Yaml使用方法：
 
 在您的 ESPHome YAML 配置中添加：
 
@@ -38,8 +42,7 @@ uart:
   rx_pin: GPIO3
   baud_rate: 9600
 
-## 设备报错：
-如果连接正常，数据为未知，esphome窗口传回错误为B3,重点查485转TTL硬件。
+
 
 
 # 定义传感器、开关、number 等（详见 examples 目录）
