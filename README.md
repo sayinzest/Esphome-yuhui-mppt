@@ -38,7 +38,12 @@ Made for mppt charginger for Yuhui or Jvyuan ,esphome base on Homeassistant syst
  如果以前安装成功的，要更新最新的版本，要重新清理以前的缓存文件，在ESPHome Builder应用里面，找到你的设备卡片，点击卡片右侧或下方的 三个点 ⋮（更多操作），在弹出菜单里找到：
 中文界面：“清理构建文件” 或 “清除构建文件”
 英文界面：Clean Build Files
-清理文件，重新下载编译就行。
+清理文件，重新下载编译就行。如果不行，则加一行代码强制更新  refresh: 0s 。
+
+external_components:
+  - source: github://sayinzest/Esphome-yuhui-mppt@main
+    components: [ yuhui_mppt ]
+    refresh: 0s   # 强制每次编译都拉取最新
 
 
 
@@ -55,14 +60,5 @@ uart:
   tx_pin: GPIO1
   rx_pin: GPIO3
   baud_rate: 9600
-
-## 
-
-更新版本方法：
-  如果以前安装成功的，要更新最新的版本，要重新清理以前的缓存文件，在ESPHome Builder应用里面，找到你的设备卡片，点击卡片右侧或下方的 三个点 ⋮（更多操作），在弹出菜单里找到：
-中文界面：“清理构建文件” 或 “清除构建文件”
-英文界面：Clean Build Files
-清理文件，重新下载编译就行。
-
 
 # 定义传感器、开关、number 等（详见 examples 目录）
