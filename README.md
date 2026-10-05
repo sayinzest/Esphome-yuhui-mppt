@@ -12,6 +12,11 @@ Made for mppt charginger for Yuhui or Jvyuan ,esphome base on Homeassistant syst
 - 读取设备日发电量、总发电量（kWh）
 - 控制：禁止充电开关、DC 输出开关
 - 手动设置最大充电电流（0.1A~130A，步进 0.1A）
+  
+## 修正历史(没有tag分支，只有Main)
+ v1.2, 修正mppt的功率计算错误。
+ v1.1, 修正重启会将充电电流清零默认；
+ v1.0，第一次发布，带调节电流功能；
 
 ## 接线
 
@@ -25,7 +30,14 @@ Made for mppt charginger for Yuhui or Jvyuan ,esphome base on Homeassistant syst
 波特率：9600 8 N 1
 
 ## 设备报错：
-如果连接正常，数据为未知，esphome窗口传回错误为B3,重点查485转TTL硬件。
+如果连接正常，读出来的数据为“未知”，esphome窗口传回错误为B3,重点查485转TTL硬件，正常两点灯都亮。
+
+## 更新ESPhome设备版本方法：
+ 如果以前安装成功的，要更新最新的版本，要重新清理以前的缓存文件，在ESPHome Builder应用里面，找到你的设备卡片，点击卡片右侧或下方的 三个点 ⋮（更多操作），在弹出菜单里找到：
+中文界面：“清理构建文件” 或 “清除构建文件”
+英文界面：Clean Build Files
+清理文件，重新下载编译就行。
+
 
 
 ## 配置Yaml使用方法：
@@ -41,6 +53,8 @@ uart:
   tx_pin: GPIO1
   rx_pin: GPIO3
   baud_rate: 9600
+
+## 
 
 更新版本方法：
   如果以前安装成功的，要更新最新的版本，要重新清理以前的缓存文件，在ESPHome Builder应用里面，找到你的设备卡片，点击卡片右侧或下方的 三个点 ⋮（更多操作），在弹出菜单里找到：
