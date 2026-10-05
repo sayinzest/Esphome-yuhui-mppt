@@ -41,7 +41,7 @@ uart:
 external_components:
   - source: github://sayinzest/Esphome-yuhui-mppt@main
     components: [ yuhui_mppt ]
-    refresh: 0s   # 强制每次编译都拉取最新
+    refresh: 0s   # 强制每次编译都会拉取最新代码,可能会变慢，不出问题可删除这行。
 
 yuhui_mppt:
   address: 1
